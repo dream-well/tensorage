@@ -36,7 +36,7 @@ import hashlib
 from tqdm import tqdm
 
 # import this repo
-import storage
+import tensorage
 import threading
 
 FAILED_KEY = -1
@@ -209,7 +209,7 @@ def main(config):
             )
         return getattr(local_storage, f"connection_{alloc['validator']}")
 
-    async def retrieve(synapse: storage.protocol.Retrieve) -> storage.protocol.Retrieve:
+    async def retrieve(synapse: tensorage.protocol.Retrieve) -> tensorage.protocol.Retrieve:
         try:
             # Check if we have the data connection locally
             if synapse.key_list:
@@ -242,7 +242,7 @@ def main(config):
         # Result
         return synapse
 
-    async def store(synapse: storage.protocol.Store) -> storage.protocol.Store:
+    async def store(synapse: tensorage.protocol.Store) -> tensorage.protocol.Store:
         try:
             # Connect to SQLite databases
             db = get_db_connection(allocations[synapse.dendrite.hotkey])
@@ -263,7 +263,7 @@ def main(config):
         bt.logging.success(f"Stored data for key {synapse.key}!")
         return synapse
 
-    async def ping(synapse: storage.protocol.Ping) -> storage.protocol.Ping:
+    async def ping(synapse: tensorage.protocol.Ping) -> tensorage.protocol.Ping:
         synapse.data = "OK"
         return synapse
 
